@@ -30,7 +30,7 @@ function Home() {
             </div>
 
             {/* Combobox */}
-            <div>
+            <div className="grid my-8 mx-8 sm:grid-cols-5 gap-4 grid-cols-3">
                 <ComboboxDemo />
                 <ComboboxDemo />
                 <ComboboxDemo />
