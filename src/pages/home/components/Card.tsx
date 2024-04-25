@@ -31,7 +31,7 @@ function JobCard({ job }: { job: Job }) {
 
 			<div className="flex items-center justify-end px-4 sm:col-span-3">
 				<Link to={job.applyLink} target="_blank">
-					<Button variant="outline">Apply</Button>
+					<Button>Apply</Button>
 				</Link>
 			</div>
 		</Card>
