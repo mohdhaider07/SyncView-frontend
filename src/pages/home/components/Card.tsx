@@ -15,10 +15,10 @@ interface Job {
 	disabilityTypes?: string; // Optional property
 	description: string;
 }
-function JobCard({ job }: { job: Job }) {
+function JobCard({ job ,highlighted}: { job: Job,highlighted:boolean }) {
 	console.log("job", job);
 	return (
-		<Card className="grid gap-4 mx-8 my-4 sm:grid-cols-12">
+		<Card className={`grid gap-4 mx-8 my-4 sm:grid-cols-12 ${highlighted &&  "bg-teal-200"}`}>
 			<CardHeader className="sm:col-span-3">
 				<div>
 					<CardTitle>{job.role}</CardTitle>
