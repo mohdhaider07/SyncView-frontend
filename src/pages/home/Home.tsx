@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import JobCard from "./components/Card";
 import SelectButton from "./components/SelectButton";
 import axios from "axios";
-import ChatBot from "@/lib/ChatBot";
+// import ChatBot from "@/lib/ChatBot";
 import { Input } from "@/components/ui/input";
 // import { Button } from "@/components/ui/button";
 import alanBtn from "@alan-ai/alan-sdk-web";
