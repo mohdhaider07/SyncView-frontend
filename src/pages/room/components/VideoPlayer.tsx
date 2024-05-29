@@ -1,5 +1,6 @@
 import { useSocket } from "@/context/SocketContext";
-import { useEffect, useState } from "react";
+import { getYouTubeVideoId } from "@/utils/utils";
+import { useEffect, useState, useRef, useCallback } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 
 function VideoPlayer({
@@ -12,77 +13,77 @@ function VideoPlayer({
   console.log(selectedVideo, roomId);
 
   const socket = useSocket();
-
-  const [player, setPlayer] = useState<any>(null);
+  const playerRef = useRef<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const isProgrammaticRef = useRef<boolean>(false); // Use a ref for isProgrammatic flag
 
+  const handlePlay = useCallback((time: number) => {
+    // console.log("play", time);
+    if (playerRef.current) {
+      isProgrammaticRef.current = true; // Set the flag before programmatic actions
+
+      playerRef.current.seekTo(time, true);
+      playerRef.current.playVideo();
+    }
+    setCurrentTime(time);
+  }, []);
+
+  const handlePause = useCallback((time: number) => {
+    if (playerRef.current) {
+      isProgrammaticRef.current = true; // Set the flag before programmatic actions
+
+      playerRef.current.seekTo(time, true);
+      playerRef.current.pauseVideo();
+    }
+    setCurrentTime(time);
+  }, []);
+
+  // useEffect to register and clean up socket event listeners
   useEffect(() => {
     socket.emit("joinRoom", roomId);
 
-    socket.on("play", (time: number) => {
-      if (player) {
-        player.seekTo(time, true);
-        player.playVideo();
-      }
-      setCurrentTime(time);
-    });
-
-    socket.on("pause", (time: number) => {
-      if (player) {
-        player.seekTo(time, true);
-        player.pauseVideo();
-      }
-      setCurrentTime(time);
-    });
-
-    socket.on("seek", (time: number) => {
-      if (player) {
-        player.seekTo(time, true);
-      }
-      setCurrentTime(time);
-    });
+    socket.on("play", handlePlay);
+    socket.on("pause", handlePause);
 
     return () => {
-      socket.off("play");
-      socket.off("pause");
-      socket.off("seek");
+      socket.off("play", handlePlay);
+      socket.off("pause", handlePause);
     };
-  }, [player]);
+  }, [socket, roomId, handlePlay, handlePause]);
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
-    setPlayer(event.target);
+    playerRef.current = event.target;
   };
 
   const onPlay = (event: any) => {
-    const time = event.target.getCurrentTime();
-    socket.emit("play", roomId, time);
-    setCurrentTime(time);
+    if (!isProgrammaticRef.current) {
+      const time = event.target.getCurrentTime();
+      socket.emit("play", roomId, time);
+      setCurrentTime(time);
+    }
+    isProgrammaticRef.current = false; // Reset the flag after handling
   };
 
   const onPause = (event: any) => {
-    const time = event.target.getCurrentTime();
-    socket.emit("pause", roomId, time);
-    setCurrentTime(time);
-  };
-  const onSeek = (event: any) => {
-    const time = event.target.getCurrentTime();
-    socket.emit("seek", roomId, time);
-    setCurrentTime(time);
+    if (!isProgrammaticRef.current) {
+      const time = event.target.getCurrentTime();
+      socket.emit("pause", roomId, time);
+      setCurrentTime(time);
+    }
+    isProgrammaticRef.current = false; // Reset the flag after handling
   };
 
   return (
     <div>
       <h1>Video Room: {roomId}</h1>
       <YouTube
-        videoId={"L1TTNOBbN2k" || undefined}
+        videoId={getYouTubeVideoId(selectedVideo)}
         opts={{ playerVars: { controls: 1 } }}
         onReady={onPlayerReady}
-        onPlay={onPlay}
-        onPause={onPause}
-        // onStateChange={(event) => {
-        //   if (event.data === 1) onPlay(event); // 1 is the code for playing
-        //   if (event.data === 2) onPause(event); // 2 is the code for paused
-        // }}
+        onStateChange={(event) => {
+          if (event.data === 1) onPlay(event); // 1 is the code for playing
+          if (event.data === 2) onPause(event); // 2 is the code for paused
+        }}
       />
       <p>Current Time: {currentTime}s</p>
     </div>

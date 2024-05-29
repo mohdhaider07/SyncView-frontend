@@ -21,6 +21,7 @@ function Room() {
     if (roomId) getRoom(roomId);
   }, [roomId]);
 
+  // console.log(selectedVideo, roomId);
   return (
     <div>
       {/* left div video will go inside of it */}
