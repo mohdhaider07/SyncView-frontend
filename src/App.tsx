@@ -1,44 +1,34 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/home/Home";
-import JobPage from "./pages/job/Job";
-
+import Room from "@/pages/room/Room";
 
 function App() {
-
-
-	return (
-		<>
-			<BrowserRouter>
-				<div className="flex items-center px-8 ">
-					<img
-						className="w-auto h-20"
-						src="logo.png"
-						alt="Description of the image"
-					/>
-				</div>
-				<Routes>
-					<Route
-						path="/"
-						element={
-							<div>
-								{" "}
-								<Home />{" "}
-							</div>
-						}
-					/>
-					<Route
-						path="job"
-						element={
-							<div>
-								{" "}
-								<JobPage />{" "}
-							</div>
-						}
-					/>
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                {" "}
+                <Home /> i
+              </div>
+            }
+          />
+          <Route
+            path="/room/:roomId"
+            element={
+              <div>
+                {" "}
+                <Room />{" "}
+              </div>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;
