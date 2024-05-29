@@ -1,11 +1,10 @@
 import axios from "axios";
 
-// const BASE_URL = import.meta.env.VITE_BASE_URL as string;
-// const BASE_URL = "http://localhost:5000/api";
-const BASE_URL = "https://syncview-backend.onrender.com/api";
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL as string;
+console.log(BASE_URL);
 
 export const publicRequest = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL + "/api",
 });
 
 // export const userRequest = axios.create({
