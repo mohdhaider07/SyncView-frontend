@@ -6,9 +6,11 @@ import YouTube, { YouTubeProps } from "react-youtube";
 function VideoPlayer({
   selectedVideo,
   roomId,
+  setSelectedVideo,
 }: {
   selectedVideo: string;
   roomId: string;
+  setSelectedVideo: (url: string) => void;
 }) {
   console.log(selectedVideo, roomId);
 
@@ -38,12 +40,22 @@ function VideoPlayer({
     setCurrentTime(time);
   }, []);
 
+  const handleVideoChange = useCallback((selectedVideo: string) => {
+    if (playerRef.current) {
+      console.log("changing video", selectedVideo);
+      setSelectedVideo(selectedVideo);
+    }
+    setCurrentTime(0);
+  }, []);
+
   // useEffect to register and clean up socket event listeners
   useEffect(() => {
     socket.emit("joinRoom", roomId);
 
     socket.on("play", handlePlay);
     socket.on("pause", handlePause);
+
+    socket.on("changeVideo", handleVideoChange);
 
     return () => {
       socket.off("play", handlePlay);
@@ -72,18 +84,25 @@ function VideoPlayer({
     }
     isProgrammaticRef.current = false; // Reset the flag after handling
   };
+  // when ever selected video changes it should  emit the event to all the users in the room
+  useEffect(() => {
+    socket.emit("changeVideo", roomId, selectedVideo);
+    console.log("changing video", selectedVideo);
+  }, [selectedVideo]);
 
   return (
     <div>
-      <h1>Video Room: {roomId}</h1>
       <YouTube
+        className="w-full h-96"
         videoId={getYouTubeVideoId(selectedVideo)}
         opts={{ playerVars: { controls: 1 } }}
         onReady={onPlayerReady}
-        onStateChange={(event) => {
-          if (event.data === 1) onPlay(event); // 1 is the code for playing
-          if (event.data === 2) onPause(event); // 2 is the code for paused
-        }}
+        onPause={onPause}
+        onPlay={onPlay}
+        // onStateChange={(event) => {
+        //   if (event.data === 1) onPlay(event); // 1 is the code for playing
+        //   if (event.data === 2) onPause(event); // 2 is the code for paused
+        // }}
       />
       <p>Current Time: {currentTime}s</p>
     </div>
