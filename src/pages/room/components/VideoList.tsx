@@ -1,8 +1,4 @@
-function extractVideoId(url: string) {
-  // Extract video ID from URL
-  const urlParams = new URLSearchParams(new URL(url).search);
-  return urlParams.get("v");
-}
+import { getYouTubeVideoId } from "@/utils/utils";
 
 function VideoList({
   videoUrls,
@@ -21,7 +17,7 @@ function VideoList({
         >
           <img
             className="object-contain w-20 h-12 mr-2"
-            src={`https://img.youtube.com/vi/${extractVideoId(
+            src={`https://img.youtube.com/vi/${getYouTubeVideoId(
               url
             )}/default.jpg`}
             alt="Video Thumbnail"
