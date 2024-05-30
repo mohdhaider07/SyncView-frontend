@@ -14,7 +14,7 @@ function VideoPlayer({
   setSelectedVideo: (url: string) => void;
   setVideoList: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
-  console.log(selectedVideo, roomId);
+  // console.log(selectedVideo, roomId);
 
   const socket = useSocket();
   const playerRef = useRef<any>(null);
@@ -54,7 +54,6 @@ function VideoPlayer({
     if (playerRef.current) {
       isProgrammaticRef.current = true; // Set the flag before programmatic actions
       console.log("changing video", selectedVideo);
-      // setVideoList((prev: string[]) => [...prev, selectedVideo]);
       setSelectedVideo(selectedVideo);
     }
     setCurrentTime(0);
@@ -104,7 +103,7 @@ function VideoPlayer({
     setTimeout(() => {
       isProgrammaticRef.current = false; // Reset the flag after handling
       console.log("onPause after changed to false", isProgrammaticRef.current);
-    }, 500); // Adjust the timeout as necessary// Reset the flag after handling
+    }, 600); // Adjust the timeout as necessary// Reset the flag after handling
   };
 
   useEffect(() => {
