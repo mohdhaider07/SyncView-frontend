@@ -48,7 +48,6 @@ function Room() {
           <SocketProvider>
             <VideoPlayer
               selectedVideo={selectedVideo}
-              setVideoList={setVideoList}
               setSelectedVideo={setSelectedVideo}
               roomId={roomId!}
             />

@@ -12,7 +12,7 @@ function App() {
             element={
               <div>
                 {" "}
-                <Home /> i
+                <Home />
               </div>
             }
           />

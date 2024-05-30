@@ -7,12 +7,10 @@ function VideoPlayer({
   selectedVideo,
   roomId,
   setSelectedVideo,
-  setVideoList,
 }: {
   selectedVideo: string;
   roomId: string;
   setSelectedVideo: (url: string) => void;
-  setVideoList: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   // console.log(selectedVideo, roomId);
 
@@ -24,15 +22,15 @@ function VideoPlayer({
   const handlePlay = useCallback((time: number) => {
     // console.log("play", time);
     if (playerRef.current) {
-      console.log("handle play before", isProgrammaticRef.current);
+      // console.log("handle play before", isProgrammaticRef.current);
 
       isProgrammaticRef.current = true; // Set the flag before programmatic actions
-      console.log("handle play after", isProgrammaticRef.current);
+      // console.log("handle play after", isProgrammaticRef.current);
       playerRef.current.seekTo(time, true);
-      console.log("handle play after seek", isProgrammaticRef.current);
+      // console.log("handle play after seek", isProgrammaticRef.current);
       // isProgrammaticRef.current = true;
       playerRef.current.playVideo();
-      console.log("handle play after playvideo", isProgrammaticRef.current);
+      // console.log("handle play after playvideo", isProgrammaticRef.current);
     }
     setCurrentTime(time);
   }, []);
