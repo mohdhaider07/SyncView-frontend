@@ -8,21 +8,21 @@ function VideoList({
   setSelectedVideo: (url: string) => void;
 }) {
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {videoUrls.map((url, index) => (
         <div
           onClick={() => setSelectedVideo(url)}
           key={index}
-          className="flex items-center cursor-pointer "
+          className="flex cursor-pointer"
         >
           <img
-            className="object-contain w-20 h-12 mr-2"
+            className="object-fill rounded w-24 aspect-[16/10] mr-2"
             src={`https://img.youtube.com/vi/${getYouTubeVideoId(
               url
             )}/default.jpg`}
             alt="Video Thumbnail"
           />
-          <p className="w-48 text-sm text-gray-600 truncate">{url}</p>
+          <p className="w-48 text-sm text-gray-600 break-all text-wrap">{url}</p>
         </div>
       ))}
     </div>

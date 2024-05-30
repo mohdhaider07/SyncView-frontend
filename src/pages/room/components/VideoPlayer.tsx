@@ -116,7 +116,8 @@ function VideoPlayer({
   return (
     <div>
       <YouTube
-        className="w-full h-96"
+        className="aspect-video rounded"
+        iframeClassName="w-full h-full rounded-xl"
         videoId={getYouTubeVideoId(selectedVideo)}
         opts={{ playerVars: { controls: 1 } }}
         onReady={onPlayerReady}

@@ -5,7 +5,10 @@ import VideoPlayer from "./components/VideoPlayer";
 import { SocketProvider } from "@/context/SocketContext";
 import VideoList from "./components/VideoList";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+
 function Room() {
+  const { toast } = useToast();
   const [selectedVideo, setSelectedVideo] = useState<string>("");
   const [videoList, setVideoList] = useState<string[]>([]);
 
@@ -24,6 +27,15 @@ function Room() {
   };
 
   const addVideoUrl = async (url: string) => {
+    // check for empty url
+    if (!url) {
+      toast({
+        title: "Video URL is empty",
+        description: "Please enter a video URL",
+        variant: "destructive",
+      });
+      return;
+    }
     // rooms/roomId  put request to this
     try {
       await publicRequest.put(`/rooms/${roomId}`, { videoUrl: url });
@@ -41,9 +53,9 @@ function Room() {
 
   // console.log(selectedVideo, roomId);
   return (
-    <div className="flex w-full h-full overflow-hidden bg-gray-100">
+    <div className="flex gap-8 p-12 min-h-screen w-full h-full overflow-hidden bg-gray-100">
       {/* left div video will go inside of it */}
-      <div className="w-3/4 h-full overflow-hidden bg-gray-100">
+      <div className="w-3/4 h-full overflow-hidden">
         {roomId && selectedVideo ? (
           <SocketProvider>
             <VideoPlayer
@@ -53,7 +65,7 @@ function Room() {
             />
           </SocketProvider>
         ) : (
-          <div className="flex items-center justify-center w-full bg-gray-50 ">
+          <div className="flex items-center justify-center">
             <h1 className="text-2xl font-bold text-gray-600">
               Loading Video...
             </h1>
@@ -61,23 +73,25 @@ function Room() {
         )}
       </div>
       {/* right div here we will show all the videos */}
-      <div className="w-1/4 h-full overflow-y-auto bg-gray-50">
+      <div className="p-4 w-1/4 h-full overflow-y-auto bg-white rounded-xl">
         {/* heading video list */}
-        <div className="flex flex-col items-center justify-center p-1 m-2 bg-gray-700 rounded-lg">
+        <div className="flex flex-col gap-4 items-center justify-center rounded-lg">
           <Input
             type="text"
             value={tempVideoUrl}
             onChange={(e) => setTempVideoUrl(e.target.value)}
             placeholder="Enter Video URL"
+            className="placeholder:text-slate-400"
           />
           <button
             onClick={() => addVideoUrl(tempVideoUrl)}
-            className="w-full px-4 py-1 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full text-white px-4 py-1 bg-blue-500 rounded-md hover:bg-blue-600"
           >
-            +
+            Add new
           </button>
         </div>
         {/* video list component */}
+        <hr className="my-4"></hr>
         <VideoList videoUrls={videoList} setSelectedVideo={setSelectedVideo} />
       </div>
     </div>
