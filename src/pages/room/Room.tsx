@@ -6,6 +6,7 @@ import { SocketProvider } from "@/context/SocketContext";
 import VideoList from "./components/VideoList";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 function Room() {
   const { toast } = useToast();
@@ -83,12 +84,12 @@ function Room() {
             placeholder="Enter Video URL"
             className="placeholder:text-slate-400"
           />
-          <button
+          <Button
             onClick={() => addVideoUrl(tempVideoUrl)}
             className="w-full text-white px-4 py-1 bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Add new
-          </button>
+          </Button>
         </div>
         {/* video list component */}
         <hr className="my-4"></hr>

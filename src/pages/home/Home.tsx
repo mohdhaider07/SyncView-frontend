@@ -3,6 +3,7 @@ import { publicRequest } from "@/requestMethods";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 function Home() {
   const { toast } = useToast();
@@ -50,12 +51,12 @@ function Home() {
           className="placeholder:text-slate-300 text-white"
         />
         <div className="flex w-full gap-8">
-          <button
+          <Button
             onClick={() => createRoom(videoUrl)}
             className="px-4 py-2 w-full mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Create Room
-          </button>
+          </Button>
         </div>
       </div>
       <p>OR</p>
@@ -70,12 +71,12 @@ function Home() {
           className="placeholder:text-slate-300 text-white"
         />
         <div className="flex w-full gap-8">
-          <button
+          <Button
             onClick={() => navigate(`/room/${roomId}`)}
             className="px-4 py-2 w-full mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Join Room
-          </button>
+          </Button>
         </div>
       </div>
     </div>

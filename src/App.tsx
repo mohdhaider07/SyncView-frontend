@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/home/Home";
 import Room from "@/pages/room/Room";
 import { Toaster } from "@/components/ui/toaster";
+import Login from "@/pages/Login"
+import Register from "@/pages/Register";
 
 function App() {
   return (
@@ -13,7 +15,6 @@ function App() {
             path="/"
             element={
               <div>
-                {" "}
                 <Home />
               </div>
             }
@@ -22,8 +23,23 @@ function App() {
             path="/room/:roomId"
             element={
               <div>
-                {" "}
-                <Room />{" "}
+                <Room />
+              </div>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <div>
+                <Login />
+              </div>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <div>
+                <Register />
               </div>
             }
           />
