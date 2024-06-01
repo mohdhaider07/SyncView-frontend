@@ -66,9 +66,16 @@ const Profile = () => {
   }, [authState, toast]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 md:flex-row">
+    <div className="min-h-screen text-primary bg-background">
+      <div className="p-12 min-w-min">
+        <h1 className="text-3xl capitalize font-semibold">
+          Welcome, {authState?.user.username}!
+        </h1>
+        <p className="text-placeholder">{authState?.user.email}</p>
+        <p className="border-b-2 mt-2  border-b-primary"></p>
+      </div>
       {/* Left Side - User Info */}
-      <div className="w-full p-8 bg-white shadow-lg md:w-1/3 lg:w-1/4">
+      {/* <div className="w-full p-8 bg-white shadow-lg md:w-1/3 lg:w-1/4">
         <div className="flex flex-col items-center">
           <img
             src={`https://avatars.dicebear.com/api/human/${authState?.user.username}.svg`}
@@ -80,49 +87,47 @@ const Profile = () => {
           </h2>
           <p className="text-gray-600">{authState?.user.email}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Right Side - Created Rooms */}
-      <div className="flex-1 p-8">
-        <h2 className="mb-8 text-3xl font-semibold text-gray-800">
+      <div className="p-12 pt-0">
+        <h2 className="mb-6 text-2xl font-semibold text-primary">
           Created Rooms
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {isGettingCreatedRooms ? (
-            <p className="text-gray-600">Fetching your rooms...</p>
+            <p className="text-gray-600 flex col-span-full mt-20 w-full justify-center items-center">Fetching your rooms...</p>
           ) : createdRooms.length > 0 ? (
             createdRooms.map((room) => (
               <div
                 key={room._id}
-                className="relative p-6 transition-shadow duration-200 bg-white rounded-lg shadow-lg hover:shadow-xl"
+                className="relative p-4 transition-shadow duration-200 bg-white rounded-lg shadow-lg hover:shadow-xl"
               >
                 <Link to={`/room/${room.roomId}`}>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-700">
+                  <h3 className="mb-2 uppercase text-xl font-semibold ">
                     {room.roomId}
                   </h3>
-                  <p className="flex items-center justify-between text-gray-600">
-                    <span className="font-medium">
+                  <p className="flex items-center justify-between text-primary">
+                    <span className="">
                       Created at:{" "}
                       {new Date(room.createdAt).toLocaleDateString()}
                     </span>
-                    <span className="font-medium">
-                      Size: {room.videoUrl.length}
-                    </span>
+                    <span className="">Size: {room.videoUrl.length}</span>
                   </p>
                 </Link>
                 <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-gray-500 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none">
+                  <DropdownMenuTrigger asChild>
+                    <Button className="absolute top-0 right-0 w-4 p-2 h-4 mt-2 mr-2 text-gray-500 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none">
                       ⋮
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="absolute right-0 z-10 w-40 bg-white shadow-lg top-4">
+                  <DropdownMenuContent className="z-10 w-40 bg-white shadow-lg">
                     <DropdownMenuItem
                       disabled={isDeletingRoom}
                       onClick={() => deleteRoom(room.roomId)}
                       className="text-white bg-red-500 hover:bg-red-600"
                     >
-                      Delete Room
+                      Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

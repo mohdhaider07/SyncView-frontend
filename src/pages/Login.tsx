@@ -75,14 +75,14 @@ function Login() {
   }, [authState]);
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-background text-primary">
       <div className="flex items-center justify-center h-screen">
         <div className="p-6 bg-white rounded-lg w-96">
           <h1 className="text-2xl text-center">Login</h1>
           <form onSubmit={handleSumbit} className="mt-4 space-y-4">
             {fields.map((field, index) => (
               <div key={index}>
-                <label htmlFor={field.id} className="text-sm text-gray-600">
+                <label htmlFor={field.id} className="font-medium text-sm">
                   {field.label}
                 </label>
                 <Input
@@ -91,7 +91,7 @@ function Login() {
                   placeholder={field.placeholder}
                   value={field.value}
                   onChange={field.onChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2 rounded-lg"
                 />
               </div>
             ))}

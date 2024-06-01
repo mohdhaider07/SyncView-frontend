@@ -115,7 +115,7 @@ function Room() {
           <Button
             onClick={() => addVideoUrl(tempVideoUrl)}
             disabled={isLoading}
-            className="w-full px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-1 text-white  rounded-md "
           >
             {isLoading ? "Adding Video..." : "Add Video"}
           </Button>

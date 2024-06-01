@@ -98,14 +98,14 @@ const Register = () => {
   }, [authState]);
 
   return (
-    <div className="bg-gray-100">
-      <div className="flex items-center justify-center h-screen">
+    <div className="bg-background">
+      <div className="flex items-center text-primary justify-center h-screen">
         <div className="p-6 bg-white rounded-lg w-96">
           <h1 className="text-2xl text-center">Register</h1>
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             {fields.map((field, index) => (
               <div key={index}>
-                <label htmlFor={field.id} className="text-sm text-gray-600">
+                <label htmlFor={field.id} className="text-sm font-medium">
                   {field.label}
                 </label>
                 <Input

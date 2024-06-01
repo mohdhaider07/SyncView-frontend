@@ -15,7 +15,6 @@ function Home() {
   const [isCreatingRoom, setIsCreatingRoom] = useState<boolean>(false);
   const navigate = useNavigate();
   const createRoom = async (videoUrl: string) => {
-    setIsCreatingRoom(true);
     try {
       if (!videoUrl) {
         toast({
@@ -23,7 +22,9 @@ function Home() {
           description: "Please enter a video URL",
           variant: "destructive",
         });
+        return;
       }
+      setIsCreatingRoom(true);
       const { data } = await userRequest.post("/room/create", { videoUrl });
       toast({
         title: "Created Room Successfully",
@@ -42,15 +43,16 @@ function Home() {
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white bg-transparent">
-      <video
+    <div className="flex flex-col items-center justify-center h-full text-primary bg-transparent">
+      {/* <video
         src="video.mp4"
         className="fixed inset-0 object-cover w-full h-full -z-10 backdrop-blur-sm"
         loop
         muted
         autoPlay
-      ></video>
-      <h1 className="text-4xl font-bold">Welcome to the Home Page</h1>
+      ></video> */}
+      <div className="fixed inset-0 -z-10 h-full w-full bg-background"></div>
+      <h1 className="text-4xl font-bold mt-36">Welcome to Home Page</h1>
       <div className="flex flex-col items-center justify-center w-1/3 p-4 mt-8 bg-transparent rounded-lg">
         <Input
           type="text"
@@ -59,13 +61,13 @@ function Home() {
             setVideoUrl(e.target.value);
           }}
           placeholder="Enter Video URL"
-          className="text-white placeholder:text-slate-300"
+          className=""
         />
         <div className="flex w-full gap-8">
           <Button
             disabled={isCreatingRoom}
             onClick={() => createRoom(videoUrl)}
-            className="w-full px-4 py-2 mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-2 mt-4  rounded-md "
           >
             {isCreatingRoom ? "Creating Room..." : "Create Room"}
           </Button>
@@ -80,12 +82,12 @@ function Home() {
             setRoomId(e.target.value);
           }}
           placeholder="Enter room id"
-          className="text-white placeholder:text-slate-300"
+          className=""
         />
         <div className="flex w-full gap-8">
           <Button
             onClick={() => navigate(`/room/${roomId}`)}
-            className="w-full px-4 py-2 mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-2 mt-4  rounded-md "
           >
             Join Room
           </Button>
