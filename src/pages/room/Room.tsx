@@ -12,9 +12,16 @@ function Room() {
   const { toast } = useToast();
   const [selectedVideo, setSelectedVideo] = useState<string>("");
   const [videoList, setVideoList] = useState<string[]>([]);
-  const [tempVideoUrl, setTempVideoUrl] = useState<string>("");
+  // thisis the variable to store the new url
+  const [newUrl, setNewUrl] = useState<string>("");
+  // url which is removed
+  const [urlRemoved, setUrlRemoved] = useState<string>("");
   // loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // thisis the the flag to check url is added
+  const [newUrlAdded, setNewUrlAdded] = useState<boolean>(false);
+  // this is the flag to check if the url is removed
+  const [isUrlRemoved, setIsUrlRemoved] = useState<boolean>(false);
 
   const [isGettingRoom, setIsGettingRoom] = useState<boolean>(false);
 
@@ -62,7 +69,7 @@ function Room() {
         title: "Video Added Successfully",
         variant: "default",
       });
-      setTempVideoUrl("");
+      setNewUrlAdded(true);
       setIsLoading(false);
     } catch (err: any) {
       toast({
@@ -88,6 +95,17 @@ function Room() {
         {roomId && !isGettingRoom ? (
           <SocketProvider>
             <VideoPlayer
+              newUrlAdded={newUrlAdded}
+              setNewUrlAdded={setNewUrlAdded}
+              newUrl={newUrl}
+              setNewUrl={setNewUrl}
+              videoList={videoList}
+              setVideoList={setVideoList}
+              // for removing the url
+              setUrlRemoved={setUrlRemoved}
+              setIsUrlRemoved={setIsUrlRemoved}
+              urlRemoved={urlRemoved}
+              isUrlRemoved={isUrlRemoved}
               selectedVideo={selectedVideo}
               setSelectedVideo={setSelectedVideo}
               roomId={roomId!}
@@ -107,13 +125,13 @@ function Room() {
         <div className="flex flex-col items-center justify-center gap-4 rounded-lg">
           <Input
             type="text"
-            value={tempVideoUrl}
-            onChange={(e) => setTempVideoUrl(e.target.value)}
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
             placeholder="Enter Video URL"
             className="placeholder:text-slate-400"
           />
           <Button
-            onClick={() => addVideoUrl(tempVideoUrl)}
+            onClick={() => addVideoUrl(newUrl)}
             disabled={isLoading}
             className="w-full px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600"
           >
@@ -126,6 +144,8 @@ function Room() {
           selectedVideo={selectedVideo}
           videoUrls={videoList}
           roomId={roomId!}
+          setUrlRemoved={setUrlRemoved}
+          setIsUrlRemoved={setIsUrlRemoved}
           setVideoList={setVideoList}
           setSelectedVideo={setSelectedVideo}
         />

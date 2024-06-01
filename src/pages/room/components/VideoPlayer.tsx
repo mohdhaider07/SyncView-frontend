@@ -7,10 +7,36 @@ function VideoPlayer({
   selectedVideo,
   roomId,
   setSelectedVideo,
+
+  newUrlAdded,
+  setNewUrlAdded,
+  newUrl,
+  setNewUrl,
+  videoList,
+  setVideoList,
+  // for removing the url
+  /*   setUrlRemoved={setUrlRemoved}
+              setIsUrlRemoved={setIsUrlRemoved}
+              urlRemoved={urlRemoved}
+              isUrlRemoved={isUrlRemoved} */
+  setUrlRemoved,
+  setIsUrlRemoved,
+  urlRemoved,
+  isUrlRemoved,
 }: {
   selectedVideo: string;
   roomId: string;
   setSelectedVideo: (url: string) => void;
+  newUrlAdded: boolean;
+  setNewUrlAdded: (value: boolean) => void;
+  newUrl: string;
+  setNewUrl: (value: string) => void;
+  videoList: string[];
+  setVideoList: (value: string[]) => void;
+  setUrlRemoved: (value: string) => void;
+  setIsUrlRemoved: (value: boolean) => void;
+  urlRemoved: string;
+  isUrlRemoved: boolean;
 }) {
   // console.log(selectedVideo, roomId);
 
@@ -57,6 +83,38 @@ function VideoPlayer({
     setCurrentTime(0);
   }, []);
 
+  const handleNewUrlAdded = useCallback((newUrl: string) => {
+    setVideoList([...videoList, newUrl]);
+  }, []);
+
+  const handleUrlRemoved = useCallback((urlRemoved: string) => {
+    setVideoList(videoList.filter((video) => video !== urlRemoved));
+
+    if (selectedVideo === urlRemoved) {
+      const remainingVideos = videoList.filter((video) => video !== urlRemoved);
+
+      if (remainingVideos.length > 0) {
+        setSelectedVideo(remainingVideos[0]);
+      } else {
+        setSelectedVideo("");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (newUrlAdded) {
+      socket.emit("newUrlAdded", roomId, newUrl);
+      setNewUrl("");
+      setNewUrlAdded(false);
+    }
+
+    if (isUrlRemoved) {
+      socket.emit("urlRemoved", roomId, urlRemoved);
+      setUrlRemoved("");
+      setIsUrlRemoved(false);
+    }
+  }, [newUrlAdded, isUrlRemoved]);
+
   // useEffect to register and clean up socket event listeners
   useEffect(() => {
     socket.emit("joinRoom", roomId);
@@ -64,6 +122,8 @@ function VideoPlayer({
     socket.on("play", handlePlay);
     socket.on("pause", handlePause);
     socket.on("changeVideo", handleVideoChange);
+    socket.on("newUrlAdded", handleNewUrlAdded);
+    socket.on("urlRemoved", handleUrlRemoved);
 
     return () => {
       socket.off("play", handlePlay);

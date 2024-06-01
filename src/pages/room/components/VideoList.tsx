@@ -14,12 +14,18 @@ function VideoList({
   selectedVideo,
   roomId,
   setVideoList,
+  /**  setUrlRemoved={setUrlRemoved}
+          setIsUrlRemoved={setIsUrlRemoved} */
+  setUrlRemoved,
+  setIsUrlRemoved,
 }: {
   videoUrls: string[];
   roomId: string;
   setSelectedVideo: (url: string) => void;
   selectedVideo: string;
   setVideoList: (videoUrls: string[]) => void;
+  setUrlRemoved: (url: string) => void;
+  setIsUrlRemoved: (value: boolean) => void;
 }) {
   const { toast } = useToast();
   // isDeleting
@@ -31,19 +37,25 @@ function VideoList({
       await userRequest.delete(`/room/delete-video/${roomId}`, {
         data: { videoUrl: url },
       });
-      setVideoList(videoUrls.filter((video) => video !== url));
       toast({
         title: "Video Removed Successfully",
         variant: "default",
       });
+      setVideoList(videoUrls.filter((video) => video !== url));
+
       if (selectedVideo === url) {
-        if (videoUrls.length > 0 && videoUrls[0] !== url) {
-          setSelectedVideo(videoUrls[0]);
+        const remainingVideos = videoUrls.filter((video) => video !== url);
+
+        if (remainingVideos.length > 0) {
+          setSelectedVideo(remainingVideos[0]);
         } else {
           setSelectedVideo("");
         }
       }
       setIsDeleting(false);
+      // for the url removed
+      setUrlRemoved(url);
+      setIsUrlRemoved(true);
     } catch (err: any) {
       toast({
         title: "Error Removing Video",

@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const { toast } = useToast();
   const { setAuthState, authState } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const fields = [
@@ -44,6 +45,7 @@ function Login() {
       });
       return;
     }
+    setIsLoading(true);
     try {
       const { data } = await publicRequest.post("/user/login", {
         email,
@@ -54,12 +56,13 @@ function Login() {
         title: "login Successfuly",
         variant: "default",
       });
+      setIsLoading(false);
       setAuthState(data);
       navigate("/");
       window.location.reload();
     } catch (error: any) {
       console.log(error);
-
+      setIsLoading(false);
       toast({
         title: "error",
         description: error.message || "Something went wrong",
@@ -95,8 +98,8 @@ function Login() {
                 />
               </div>
             ))}
-            <Button type="submit" className="w-full">
-              Login
+            <Button disabled={isLoading} type="submit" className="w-full">
+              {isLoading ? "Loading..." : "Login"}
             </Button>
           </form>
         </div>
