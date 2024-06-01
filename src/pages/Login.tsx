@@ -56,7 +56,7 @@ function Login() {
       });
       setAuthState(data);
       navigate("/");
-      window.location.reload();
+      // window.location.reload();
     } catch (error: any) {
       console.log(error);
 
