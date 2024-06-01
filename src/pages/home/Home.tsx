@@ -34,8 +34,7 @@ function Home() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description:
-          error.message || "An error occurred while creating the room",
+        description: "Login to create a room",
         variant: "destructive",
       });
       setIsCreatingRoom(false);
