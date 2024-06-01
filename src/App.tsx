@@ -2,8 +2,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/home/Home";
 import Room from "@/pages/room/Room";
 import { Toaster } from "@/components/ui/toaster";
-import Login from "@/pages/Login"
+import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Wraper from "./components/Wraper";
+import Profile from "./pages/profile/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -15,7 +18,9 @@ function App() {
             path="/"
             element={
               <div>
-                <Home />
+                <Wraper>
+                  <Home />
+                </Wraper>
               </div>
             }
           />
@@ -23,7 +28,11 @@ function App() {
             path="/room/:roomId"
             element={
               <div>
-                <Room />
+                <ProtectedRoute>
+                  <Wraper>
+                    <Room />
+                  </Wraper>
+                </ProtectedRoute>
               </div>
             }
           />
@@ -31,7 +40,9 @@ function App() {
             path="/login"
             element={
               <div>
-                <Login />
+                <Wraper>
+                  <Login />
+                </Wraper>
               </div>
             }
           />
@@ -39,7 +50,21 @@ function App() {
             path="/register"
             element={
               <div>
-                <Register />
+                <Wraper>
+                  <Register />
+                </Wraper>
+              </div>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <div>
+                <ProtectedRoute>
+                  <Wraper>
+                    <Profile />
+                  </Wraper>
+                </ProtectedRoute>
               </div>
             }
           />

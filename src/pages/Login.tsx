@@ -1,12 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import React, { useState } from "react";
-
+import { useAuth } from "@/context/AuthContext";
+import { publicRequest } from "@/requestMethods";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { toast } = useToast();
+  const { setAuthState, authState } = useAuth();
+  const navigate = useNavigate();
 
   const fields = [
     {
@@ -29,7 +33,7 @@ function Login() {
     },
   ];
 
-  const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(email, password);
     if (!email || !password) {
@@ -40,12 +44,40 @@ function Login() {
       });
       return;
     }
+    try {
+      const { data } = await publicRequest.post("/user/login", {
+        email,
+        password,
+      });
+      console.log(data);
+      toast({
+        title: "login Successfuly",
+        variant: "default",
+      });
+      setAuthState(data);
+      navigate("/");
+      window.location.reload();
+    } catch (error: any) {
+      console.log(error);
+
+      toast({
+        title: "error",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    }
   };
+  // useEffect detect auth state then redirect to home if user is logged in
+  useEffect(() => {
+    if (authState) {
+      navigate("/");
+    }
+  }, [authState]);
 
   return (
     <div className="bg-gray-100">
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-96 p-6 bg-white rounded-lg">
+      <div className="flex items-center justify-center h-screen">
+        <div className="p-6 bg-white rounded-lg w-96">
           <h1 className="text-2xl text-center">Login</h1>
           <form onSubmit={handleSumbit} className="mt-4 space-y-4">
             {fields.map((field, index) => (

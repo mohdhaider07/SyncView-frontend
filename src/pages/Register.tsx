@@ -1,15 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import React, { useState } from "react";
-
+import { useAuth } from "@/context/AuthContext";
+import { publicRequest } from "@/requestMethods";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const { toast } = useToast();
-
+  const navigate = useNavigate();
+  const { authState } = useAuth();
   const fields = [
     {
       label: "Email",
@@ -49,7 +52,7 @@ const Register = () => {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password || !username || !passwordConfirm) {
       toast({
@@ -67,12 +70,37 @@ const Register = () => {
       });
       return;
     }
+    try {
+      const { data } = await publicRequest.post("/user/register", {
+        username,
+        email,
+        password,
+      });
+      console.log(data);
+      toast({
+        title: "Registered Successfuly",
+        variant: "default",
+      });
+      navigate("/login");
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: "error",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    }
   };
+  useEffect(() => {
+    if (authState) {
+      navigate("/");
+    }
+  }, [authState]);
 
   return (
     <div className="bg-gray-100">
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-96 p-6 bg-white rounded-lg">
+      <div className="flex items-center justify-center h-screen">
+        <div className="p-6 bg-white rounded-lg w-96">
           <h1 className="text-2xl text-center">Register</h1>
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             {fields.map((field, index) => (
@@ -90,7 +118,7 @@ const Register = () => {
                 />
               </div>
             ))}
-            <Button variant='default' type="submit" className="w-full">
+            <Button variant="default" type="submit" className="w-full">
               Register
             </Button>
           </form>

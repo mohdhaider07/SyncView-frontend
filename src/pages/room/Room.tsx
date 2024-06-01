@@ -1,4 +1,4 @@
-import { publicRequest } from "@/requestMethods";
+import { publicRequest, userRequest } from "@/requestMethods";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoPlayer from "./components/VideoPlayer";
@@ -12,23 +12,40 @@ function Room() {
   const { toast } = useToast();
   const [selectedVideo, setSelectedVideo] = useState<string>("");
   const [videoList, setVideoList] = useState<string[]>([]);
-
   const [tempVideoUrl, setTempVideoUrl] = useState<string>("");
+  // loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [isGettingRoom, setIsGettingRoom] = useState<boolean>(false);
 
   const routeParams = useParams();
   const roomId = routeParams.roomId;
   const getRoom = async (roomId: string) => {
+    setIsGettingRoom(true);
     try {
-      const { data } = await publicRequest.get(`/rooms/${roomId}`);
-      setSelectedVideo(data.videoUrl[0]);
+      const { data } = await publicRequest.get(`/room/${roomId}`);
+      if (data.videoUrl.length > 0) {
+        setSelectedVideo(data.videoUrl[0]);
+      } else {
+        setSelectedVideo("");
+      }
       setVideoList(data.videoUrl);
-    } catch (err) {
+      setIsGettingRoom(false);
+    } catch (err: any) {
+      setIsGettingRoom(false);
       console.log(err);
+      toast({
+        title: "Error",
+        description:
+          err.message || "Something went wrong while getting the room",
+        variant: "destructive",
+      });
     }
   };
 
   const addVideoUrl = async (url: string) => {
     // check for empty url
+    setIsLoading(true);
     if (!url) {
       toast({
         title: "Video URL is empty",
@@ -39,10 +56,21 @@ function Room() {
     }
     // rooms/roomId  put request to this
     try {
-      await publicRequest.put(`/rooms/${roomId}`, { videoUrl: url });
+      await userRequest.put(`/room/${roomId}/addVideo`, { videoUrl: url });
       setVideoList([...videoList, url]);
+      toast({
+        title: "Video Added Successfully",
+        variant: "default",
+      });
       setTempVideoUrl("");
-    } catch (err) {
+      setIsLoading(false);
+    } catch (err: any) {
+      toast({
+        title: "Error Adding Video",
+        description: err.message || "Please try again",
+        variant: "destructive",
+      });
+      setIsLoading(false);
       console.log(err);
     }
   };
@@ -54,10 +82,10 @@ function Room() {
 
   // console.log(selectedVideo, roomId);
   return (
-    <div className="flex gap-8 p-12 min-h-screen w-full h-full overflow-hidden bg-gray-100">
+    <div className="flex flex-col w-full h-full min-h-screen gap-8 p-12 overflow-hidden bg-gray-100 lg:flex-row">
       {/* left div video will go inside of it */}
-      <div className="w-3/4 h-full overflow-hidden">
-        {roomId && selectedVideo ? (
+      <div className="h-full overflow-hidden lg:w-3/4">
+        {roomId && !isGettingRoom ? (
           <SocketProvider>
             <VideoPlayer
               selectedVideo={selectedVideo}
@@ -74,9 +102,9 @@ function Room() {
         )}
       </div>
       {/* right div here we will show all the videos */}
-      <div className="p-4 w-1/4 h-full overflow-y-auto bg-white rounded-xl">
+      <div className="h-full p-4 overflow-y-auto bg-white lg:w-1/4 rounded-xl">
         {/* heading video list */}
-        <div className="flex flex-col gap-4 items-center justify-center rounded-lg">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg">
           <Input
             type="text"
             value={tempVideoUrl}
@@ -86,14 +114,21 @@ function Room() {
           />
           <Button
             onClick={() => addVideoUrl(tempVideoUrl)}
-            className="w-full text-white px-4 py-1 bg-blue-500 rounded-md hover:bg-blue-600"
+            disabled={isLoading}
+            className="w-full px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600"
           >
-            Add new
+            {isLoading ? "Adding Video..." : "Add Video"}
           </Button>
         </div>
         {/* video list component */}
         <hr className="my-4"></hr>
-        <VideoList videoUrls={videoList} setSelectedVideo={setSelectedVideo} />
+        <VideoList
+          selectedVideo={selectedVideo}
+          videoUrls={videoList}
+          roomId={roomId!}
+          setVideoList={setVideoList}
+          setSelectedVideo={setSelectedVideo}
+        />
       </div>
     </div>
   );

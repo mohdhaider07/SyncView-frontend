@@ -1,9 +1,10 @@
 import { Input } from "@/components/ui/input";
-import { publicRequest } from "@/requestMethods";
+import { userRequest } from "@/requestMethods";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+// import { useAuth } from "@/context/AuthContext";
 
 function Home() {
   const { toast } = useToast();
@@ -11,10 +12,10 @@ function Home() {
     "https://www.youtube.com/watch?v=F8bEEsCNPw8"
   );
   const [roomId, setRoomId] = useState<string>("");
-  // publicRequest.post request to the server to create the room the funtion will take string url of the video
-  // and will return the roomId of the room created
+  const [isCreatingRoom, setIsCreatingRoom] = useState<boolean>(false);
   const navigate = useNavigate();
   const createRoom = async (videoUrl: string) => {
+    setIsCreatingRoom(true);
     try {
       if (!videoUrl) {
         toast({
@@ -23,10 +24,21 @@ function Home() {
           variant: "destructive",
         });
       }
-      const { data } = await publicRequest.post("/rooms", { videoUrl });
-      console.log(data);
+      const { data } = await userRequest.post("/room/create", { videoUrl });
+      toast({
+        title: "Created Room Successfully",
+        variant: "default",
+      });
       navigate(`/room/${data.roomId}`);
-    } catch (error) {
+      setIsCreatingRoom(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description:
+          error.message || "An error occurred while creating the room",
+        variant: "destructive",
+      });
+      setIsCreatingRoom(false);
       console.log(error);
     }
   };
@@ -34,13 +46,13 @@ function Home() {
     <div className="flex flex-col items-center justify-center h-screen text-white bg-transparent">
       <video
         src="video.mp4"
-        className="fixed inset-0 w-full h-full object-cover -z-10 backdrop-blur-sm"
+        className="fixed inset-0 object-cover w-full h-full -z-10 backdrop-blur-sm"
         loop
         muted
         autoPlay
       ></video>
       <h1 className="text-4xl font-bold">Welcome to the Home Page</h1>
-      <div className="flex flex-col items-center justify-center w-1/3 p-4 mt-8  bg-transparent rounded-lg">
+      <div className="flex flex-col items-center justify-center w-1/3 p-4 mt-8 bg-transparent rounded-lg">
         <Input
           type="text"
           value={videoUrl}
@@ -48,14 +60,15 @@ function Home() {
             setVideoUrl(e.target.value);
           }}
           placeholder="Enter Video URL"
-          className="placeholder:text-slate-300 text-white"
+          className="text-white placeholder:text-slate-300"
         />
         <div className="flex w-full gap-8">
           <Button
+            disabled={isCreatingRoom}
             onClick={() => createRoom(videoUrl)}
-            className="px-4 py-2 w-full mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-2 mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
           >
-            Create Room
+            {isCreatingRoom ? "Creating Room..." : "Create Room"}
           </Button>
         </div>
       </div>
@@ -68,12 +81,12 @@ function Home() {
             setRoomId(e.target.value);
           }}
           placeholder="Enter room id"
-          className="placeholder:text-slate-300 text-white"
+          className="text-white placeholder:text-slate-300"
         />
         <div className="flex w-full gap-8">
           <Button
             onClick={() => navigate(`/room/${roomId}`)}
-            className="px-4 py-2 w-full mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-2 mt-4 bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Join Room
           </Button>

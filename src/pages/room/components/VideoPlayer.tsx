@@ -115,16 +115,22 @@ function VideoPlayer({
 
   return (
     <div>
-      <YouTube
-        className="aspect-video rounded"
-        iframeClassName="w-full h-full rounded-xl"
-        videoId={getYouTubeVideoId(selectedVideo)}
-        opts={{ playerVars: { controls: 1 } }}
-        onReady={onPlayerReady}
-        onPause={onPause}
-        onPlay={onPlay}
-      />
-      <p>Current Time: {currentTime}s</p>
+      {selectedVideo.length > 0 ? (
+        <>
+          <YouTube
+            className="rounded aspect-video"
+            iframeClassName="w-full h-full rounded-xl"
+            videoId={getYouTubeVideoId(selectedVideo)}
+            opts={{ playerVars: { controls: 1 } }}
+            onReady={onPlayerReady}
+            onPause={onPause}
+            onPlay={onPlay}
+          />
+          <p>Current Time: {currentTime}s</p>
+        </>
+      ) : (
+        <h1 className="text-2xl font-bold text-gray-600">Select a Video</h1>
+      )}
     </div>
   );
 }
