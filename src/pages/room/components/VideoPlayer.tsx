@@ -84,29 +84,27 @@ function VideoPlayer({
   }, []);
 
   // const handleNewUrlAdded = (newUrl: string) => {
-  //   console.log("video list length into another user", videoUrls.length + 1);
+  //   console.log("video list length into another user", videoUrls.length);
   //   console.log(videoUrls, newUrl);
   //   setVideoUrls([...videoUrls, newUrl]);
   // };
 
-  const handleNewUrlAdded = useCallback(
-    (newUrl: string) => {
+  const handleNewUrlAdded = useCallback((newUrl: string) => {
+    console.log("video list length into another user", videoUrls.length),
       setVideoUrls((prevVideoUrls: string[]) => [...prevVideoUrls, newUrl]);
-    },
-    [setVideoUrls]
-  );
+  }, []);
 
   const handleUrlRemoved = (urlRemoved: string) => {
     console.log("url removed", urlRemoved);
-    setVideoUrls(videoUrls.filter((video) => video !== urlRemoved));
-    if (selectedVideo === urlRemoved) {
-      const remainingVideos = videoUrls.filter((video) => video !== urlRemoved);
-      if (remainingVideos.length > 0) {
-        setSelectedVideo(remainingVideos[0]);
-      } else {
-        setSelectedVideo("");
-      }
-    }
+    // setVideoUrls(videoUrls.filter((video) => video !== urlRemoved));
+    // if (selectedVideo === urlRemoved) {
+    //   const remainingVideos = videoUrls.filter((video) => video !== urlRemoved);
+    //   if (remainingVideos.length > 0) {
+    //     setSelectedVideo(remainingVideos[0]);
+    //   } else {
+    //     setSelectedVideo("");
+    //   }
+    // }
   };
   // const handleUrlRemoved = useCallback((urlRemoved: string) => {
   //   console.log("url removed", urlRemoved);
@@ -124,8 +122,8 @@ function VideoPlayer({
 
   useEffect(() => {
     if (newUrlAdded && newUrl.length > 0) {
+      console.log("new url socket getting emit", newUrl);
       socket.emit("newUrlAdded", roomId, newUrl);
-      console.log("emited from this user", newUrl);
       setNewUrl("");
       setNewUrlAdded(false);
     }
@@ -153,6 +151,8 @@ function VideoPlayer({
       socket.off("play", handlePlay);
       socket.off("pause", handlePause);
       socket.off("changeVideo", handleVideoChange);
+      socket.off("newUrlAdded", handleNewUrlAdded);
+      socket.off("urlRemoved", handleUrlRemoved);
     };
   }, [socket, roomId, handlePlay, handlePause]);
 
