@@ -217,9 +217,9 @@ function VideoPlayer({
             onPlay={onPlay}
           />
           {/* show current time */}
-          <div>
+          {/* <div>
             <p>Current Time: {currentTime}s</p>
-          </div>
+          </div> */}
           <div>
             {isRoomCreator && (
               <Button
