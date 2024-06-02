@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useSocket } from "@/context/SocketContext";
 import { getYouTubeVideoId } from "@/utils/utils";
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -15,14 +16,12 @@ function VideoPlayer({
   videoUrls,
   setVideoUrls,
   // for removing the url
-  /*   setUrlRemoved={setUrlRemoved}
-              setIsUrlRemoved={setIsUrlRemoved}
-              urlRemoved={urlRemoved}
-              isUrlRemoved={isUrlRemoved} */
   setUrlRemoved,
   setIsUrlRemoved,
   urlRemoved,
   isUrlRemoved,
+  // for toggle the control to other user
+  isRoomCreator,
 }: {
   selectedVideo: string;
   roomId: string;
@@ -37,12 +36,15 @@ function VideoPlayer({
   setIsUrlRemoved: (value: boolean) => void;
   urlRemoved: string;
   isUrlRemoved: boolean;
+  isRoomCreator: boolean;
 }) {
   // console.log(selectedVideo, roomId);
 
   const socket = useSocket();
   const playerRef = useRef<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [isControlEnabled, setIsControlEnabled] = useState<boolean>(true);
+
   const isProgrammaticRef = useRef<boolean>(false); // Use a ref for isProgrammatic flag
 
   const handlePlay = useCallback((time: number) => {
@@ -126,6 +128,11 @@ function VideoPlayer({
     }
   }, [isUrlRemoved]);
 
+  // handle to the toggle control
+  const handleControlToggled = useCallback((controlState: boolean) => {
+    setIsControlEnabled(controlState);
+  }, []);
+
   // useEffect to register and clean up socket event listeners
   useEffect(() => {
     socket.emit("joinRoom", roomId);
@@ -135,6 +142,7 @@ function VideoPlayer({
     socket.on("changeVideo", handleVideoChange);
     socket.on("newUrlAdded", handleNewUrlAdded);
     socket.on("urlRemoved", handleUrlRemoved);
+    socket.on("controlToggled", handleControlToggled);
 
     return () => {
       socket.off("play", handlePlay);
@@ -142,6 +150,7 @@ function VideoPlayer({
       socket.off("changeVideo", handleVideoChange);
       socket.off("newUrlAdded", handleNewUrlAdded);
       socket.off("urlRemoved", handleUrlRemoved);
+      socket.off("controlToggled", handleControlToggled);
     };
   }, [socket, roomId, handlePlay, handlePause]);
 
@@ -151,7 +160,8 @@ function VideoPlayer({
 
   const onPlay = (event: any) => {
     // console.log("onPlay before", isProgrammaticRef.current);
-    if (!isProgrammaticRef.current) {
+
+    if ((isControlEnabled || isRoomCreator) && !isProgrammaticRef.current) {
       // console.log("onPlay inside if", isProgrammaticRef.current);
       const time = event.target.getCurrentTime();
       socket.emit("play", roomId, time);
@@ -164,7 +174,7 @@ function VideoPlayer({
   const onPause = (event: any) => {
     // console.log("on Pause before", isProgrammaticRef.current);
 
-    if (!isProgrammaticRef.current) {
+    if ((isControlEnabled || isRoomCreator) && !isProgrammaticRef.current) {
       const time = event.target.getCurrentTime();
       // console.log("pause inside if", isProgrammaticRef.current);
 
@@ -178,13 +188,19 @@ function VideoPlayer({
   };
 
   useEffect(() => {
-    if (!isProgrammaticRef.current) {
+    if ((isControlEnabled || isRoomCreator) && !isProgrammaticRef.current) {
       socket.emit("changeVideo", roomId, selectedVideo);
       // console.log("changing video", selectedVideo);
     } else {
       isProgrammaticRef.current = false; // Reset the flag after handling
     }
   }, [selectedVideo]);
+
+  //
+  const toggleControl = () => {
+    socket.emit("toggleControl", !isControlEnabled); // Emit the state change
+    setIsControlEnabled((prev) => !prev);
+  };
 
   return (
     <div>
@@ -199,7 +215,23 @@ function VideoPlayer({
             onPause={onPause}
             onPlay={onPlay}
           />
-          <p>Current Time: {currentTime}s</p>
+          {/* show current time */}
+          <div>
+            <p>Current Time: {currentTime}s</p>
+          </div>
+          <div>
+            {isRoomCreator && (
+              <Button
+                variant={isControlEnabled ? "destructive" : "default"}
+                className="w-full"
+                onClick={toggleControl}
+              >
+                {isControlEnabled
+                  ? "Disable Control for Other People"
+                  : "Enable Control for All"}
+              </Button>
+            )}
+          </div>
         </>
       ) : (
         <h1 className="text-2xl font-bold text-gray-600">Select a Video</h1>

@@ -7,11 +7,15 @@ import VideoList from "./components/VideoList";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 function Room() {
   const { toast } = useToast();
   const [selectedVideo, setSelectedVideo] = useState<string>("");
   const [videoList, setVideoList] = useState<string[]>([]);
+  const [isRoomCreator, setIsRoomCreator] = useState<boolean>(false);
+  const { authState } = useAuth();
+
   // thisis the variable to store the new url
   const [newUrl, setNewUrl] = useState<string>("");
   // url which is removed
@@ -39,6 +43,9 @@ function Room() {
       }
       setVideoList(data.videoUrl);
       setIsGettingRoom(false);
+      // creator or not
+      console.log(data.createdBy, authState?.user?._id);
+      setIsRoomCreator(data.createdBy._id == authState?.user?._id);
     } catch (err: any) {
       setIsGettingRoom(false);
       console.log(err);
@@ -106,6 +113,7 @@ function Room() {
           <SocketProvider>
             <VideoPlayer
               newUrlAdded={newUrlAdded}
+              isRoomCreator={isRoomCreator}
               setNewUrlAdded={setNewUrlAdded}
               newUrl={newUrl}
               setNewUrl={setNewUrl}
