@@ -94,7 +94,7 @@ function VideoList({
           <div key={index} className="w-fit xl:w-fit lg:w-full">
             <Popover>
               <PopoverTrigger asChild>
-                <Button className="w-full px-2 py-1 text-xs text-white bg-blue-600 hover:bg-blue-800">
+                <Button variant='outline' className="w-full px-2 py-1 text-xs">
                   Options
                 </Button>
               </PopoverTrigger>

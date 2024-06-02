@@ -53,7 +53,6 @@ function Room() {
 
   const addVideoUrl = async (url: string) => {
     // check for empty url
-    setIsLoading(true);
     if (!url) {
       toast({
         title: "Video URL is empty",
