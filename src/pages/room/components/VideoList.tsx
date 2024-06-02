@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { userRequest } from "@/requestMethods";
 import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function VideoList({
   videoUrls,
   setSelectedVideo,
@@ -43,8 +43,8 @@ function VideoList({
       });
       setVideoList(videoUrls.filter((video) => video !== url));
 
-      if (selectedVideo === url) {
-        const remainingVideos = videoUrls.filter((video) => video !== url);
+      if (selectedVideo == url) {
+        const remainingVideos = videoUrls.filter((video) => video != url);
 
         if (remainingVideos.length > 0) {
           setSelectedVideo(remainingVideos[0]);
@@ -67,6 +67,10 @@ function VideoList({
     }
   };
 
+  useEffect(() => {
+    console.log("videoUrls in video list components", videoUrls);
+  }, [videoUrls]);
+
   return (
     <div className="flex flex-col gap-4">
       {videoUrls.map((url, index) => (
@@ -87,7 +91,7 @@ function VideoList({
             </p>
           </div>
           {/* rght side of the div */}
-          <div className="w-fit xl:w-fit lg:w-full">
+          <div key={index} className="w-fit xl:w-fit lg:w-full">
             <Popover>
               <PopoverTrigger asChild>
                 <Button className="w-full px-2 py-1 text-xs text-white bg-blue-600 hover:bg-blue-800">

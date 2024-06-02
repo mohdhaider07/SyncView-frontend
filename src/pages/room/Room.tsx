@@ -29,6 +29,7 @@ function Room() {
   const roomId = routeParams.roomId;
   const getRoom = async (roomId: string) => {
     setIsGettingRoom(true);
+    console.log("getting room");
     try {
       const { data } = await publicRequest.get(`/room/${roomId}`);
       if (data.videoUrl.length > 0) {
@@ -99,8 +100,8 @@ function Room() {
               setNewUrlAdded={setNewUrlAdded}
               newUrl={newUrl}
               setNewUrl={setNewUrl}
-              videoList={videoList}
-              setVideoList={setVideoList}
+              videoUrls={videoList}
+              setVideoUrls={setVideoList}
               // for removing the url
               setUrlRemoved={setUrlRemoved}
               setIsUrlRemoved={setIsUrlRemoved}
@@ -133,7 +134,7 @@ function Room() {
           <Button
             onClick={() => addVideoUrl(newUrl)}
             disabled={isLoading}
-            className="w-full px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full px-4 py-1 text-white rounded-md "
           >
             {isLoading ? "Adding Video..." : "Add Video"}
           </Button>

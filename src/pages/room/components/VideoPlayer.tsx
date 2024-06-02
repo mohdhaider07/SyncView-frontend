@@ -12,8 +12,8 @@ function VideoPlayer({
   setNewUrlAdded,
   newUrl,
   setNewUrl,
-  videoList,
-  setVideoList,
+  videoUrls,
+  setVideoUrls,
   // for removing the url
   /*   setUrlRemoved={setUrlRemoved}
               setIsUrlRemoved={setIsUrlRemoved}
@@ -31,8 +31,8 @@ function VideoPlayer({
   setNewUrlAdded: (value: boolean) => void;
   newUrl: string;
   setNewUrl: (value: string) => void;
-  videoList: string[];
-  setVideoList: (value: string[]) => void;
+  videoUrls: string[];
+  setVideoUrls: (value: string[] | ((prev: string[]) => string[])) => void;
   setUrlRemoved: (value: string) => void;
   setIsUrlRemoved: (value: boolean) => void;
   urlRemoved: string;
@@ -83,37 +83,61 @@ function VideoPlayer({
     setCurrentTime(0);
   }, []);
 
-  const handleNewUrlAdded = useCallback((newUrl: string) => {
-    setVideoList([...videoList, newUrl]);
-  }, []);
+  // const handleNewUrlAdded = (newUrl: string) => {
+  //   console.log("video list length into another user", videoUrls.length + 1);
+  //   console.log(videoUrls, newUrl);
+  //   setVideoUrls([...videoUrls, newUrl]);
+  // };
 
-  const handleUrlRemoved = useCallback((urlRemoved: string) => {
-    setVideoList(videoList.filter((video) => video !== urlRemoved));
+  const handleNewUrlAdded = useCallback(
+    (newUrl: string) => {
+      setVideoUrls((prevVideoUrls: string[]) => [...prevVideoUrls, newUrl]);
+    },
+    [setVideoUrls]
+  );
 
+  const handleUrlRemoved = (urlRemoved: string) => {
+    console.log("url removed", urlRemoved);
+    setVideoUrls(videoUrls.filter((video) => video !== urlRemoved));
     if (selectedVideo === urlRemoved) {
-      const remainingVideos = videoList.filter((video) => video !== urlRemoved);
-
+      const remainingVideos = videoUrls.filter((video) => video !== urlRemoved);
       if (remainingVideos.length > 0) {
         setSelectedVideo(remainingVideos[0]);
       } else {
         setSelectedVideo("");
       }
     }
-  }, []);
+  };
+  // const handleUrlRemoved = useCallback((urlRemoved: string) => {
+  //   console.log("url removed", urlRemoved);
+  //   setVideoList(videoList.filter((video) => video !== urlRemoved));
+
+  //   if (selectedVideo === urlRemoved) {
+  //     const remainingVideos = videoList.filter((video) => video !== urlRemoved);
+  //     if (remainingVideos.length > 0) {
+  //       setSelectedVideo(remainingVideos[0]);
+  //     } else {
+  //       setSelectedVideo("");
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (newUrlAdded) {
+    if (newUrlAdded && newUrl.length > 0) {
       socket.emit("newUrlAdded", roomId, newUrl);
+      console.log("emited from this user", newUrl);
       setNewUrl("");
       setNewUrlAdded(false);
     }
+  }, [newUrlAdded]);
 
+  useEffect(() => {
     if (isUrlRemoved) {
       socket.emit("urlRemoved", roomId, urlRemoved);
       setUrlRemoved("");
       setIsUrlRemoved(false);
     }
-  }, [newUrlAdded, isUrlRemoved]);
+  }, [isUrlRemoved]);
 
   // useEffect to register and clean up socket event listeners
   useEffect(() => {
@@ -161,7 +185,7 @@ function VideoPlayer({
     setTimeout(() => {
       isProgrammaticRef.current = false; // Reset the flag after handling
       console.log("onPause after changed to false", isProgrammaticRef.current);
-    }, 600); // Adjust the timeout as necessary// Reset the flag after handling
+    }, 700); // Adjust the timeout as necessary// Reset the flag after handling
   };
 
   useEffect(() => {

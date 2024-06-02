@@ -7,20 +7,24 @@ const Navbar: React.FC = () => {
   const { authState, clearAuthState } = useAuth();
   const navigate = useNavigate();
   return (
-    <nav className="bg-blue-600 shadow-lg">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <nav className="text-primary bg-white w-full shadow-lg">
+      <div className="px-4 mx-auto  sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-white">
+          <Link to="/" className="text-2xl font-bold text-primary">
+            SyncView
+          </Link>
+          <div className="hidden space-x-4 md:flex">
+            <Link
+              to="/"
+              className="px-3 hover:underline py-2 text-sm font-medium text-primary  rounded-md "
+            >
               Home
             </Link>
-          </div>
-          <div className="hidden space-x-4 md:flex">
             {authState ? (
               <>
                 <Link
                   to="/profile"
-                  className="px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-700"
+                  className="px-3 hover:underline py-2 text-sm font-medium text-primary  rounded-md "
                 >
                   Profile
                 </Link>
@@ -30,7 +34,8 @@ const Navbar: React.FC = () => {
                     navigate("/");
                     window.location.reload();
                   }}
-                  className="px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                  className="px-3 py-2 hover:bg-white hover:underline text-sm font-medium  text-primary rounded-md"
+                  variant="ghost"
                 >
                   Logout
                 </Button>
@@ -39,13 +44,13 @@ const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/register"
-                  className="px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-700"
+                  className="px-3 py-2 text-sm hover:underline font-medium text-primary rounded-md"
                 >
                   Register
                 </Link>
                 <Link
                   to="/login"
-                  className="px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-700"
+                  className="px-3 py-2 hover:underline text-sm font-medium  text-primary rounded-md "
                 >
                   Login
                 </Link>
@@ -55,7 +60,7 @@ const Navbar: React.FC = () => {
           <div className="flex md:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded="false"
             >
@@ -99,7 +104,7 @@ const Navbar: React.FC = () => {
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link
             to="/"
-            className="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-blue-700"
+            className="block px-3 py-2 text-base font-medium text-primary rounded-md "
           >
             Home
           </Link>
@@ -107,13 +112,13 @@ const Navbar: React.FC = () => {
             <>
               <Link
                 to="/profile"
-                className="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-blue-700"
+                className="block px-3 py-2 text-base font-medium text-primary rounded-md "
               >
                 Profile
               </Link>
               <Button
                 onClick={clearAuthState}
-                className="block w-full px-3 py-2 text-base font-medium text-left text-white bg-red-600 rounded-md hover:bg-red-700"
+                className="block w-full px-3 py-2 text-base font-medium text-left text-primary bg-red-600 rounded-md hover:bg-red-700"
               >
                 Logout
               </Button>
@@ -122,13 +127,13 @@ const Navbar: React.FC = () => {
             <>
               <Link
                 to="/register"
-                className="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-blue-700"
+                className="block px-3 py-2 text-base font-medium text-primary rounded-md "
               >
                 Register
               </Link>
               <Link
                 to="/login"
-                className="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-blue-700"
+                className="block px-3 py-2 text-base font-medium text-primary rounded-md "
               >
                 Login
               </Link>
