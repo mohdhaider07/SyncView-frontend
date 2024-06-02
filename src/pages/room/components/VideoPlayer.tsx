@@ -48,7 +48,7 @@ function VideoPlayer({
   const handlePlay = useCallback((time: number) => {
     // console.log("play", time);
     if (playerRef.current) {
-      // console.log("handle play before", isProgrammaticRef.current);
+      console.log("handle play before", isProgrammaticRef.current);
 
       isProgrammaticRef.current = true; // Set the flag before programmatic actions
       // console.log("handle play after", isProgrammaticRef.current);
@@ -63,13 +63,13 @@ function VideoPlayer({
 
   const handlePause = useCallback((time: number) => {
     if (playerRef.current) {
-      console.log("handle pause before", isProgrammaticRef.current);
+      // console.log("handle pause before", isProgrammaticRef.current);
       isProgrammaticRef.current = true; // Set the flag before programmatic actions
-      console.log("handle pause after", isProgrammaticRef.current);
+      // console.log("handle pause after", isProgrammaticRef.current);
       playerRef.current.seekTo(time, true);
-      console.log("handle play after seek", isProgrammaticRef.current);
+      // console.log("handle play after seek", isProgrammaticRef.current);
       playerRef.current.pauseVideo();
-      console.log("handle play after pause", isProgrammaticRef.current);
+      // console.log("handle play after pause", isProgrammaticRef.current);
     }
     setCurrentTime(time);
   }, []);
@@ -77,52 +77,41 @@ function VideoPlayer({
   const handleVideoChange = useCallback((selectedVideo: string) => {
     if (playerRef.current) {
       isProgrammaticRef.current = true; // Set the flag before programmatic actions
-      console.log("changing video", selectedVideo);
+      // console.log("changing video", selectedVideo);
       setSelectedVideo(selectedVideo);
     }
     setCurrentTime(0);
   }, []);
-
-  // const handleNewUrlAdded = (newUrl: string) => {
-  //   console.log("video list length into another user", videoUrls.length);
-  //   console.log(videoUrls, newUrl);
-  //   setVideoUrls([...videoUrls, newUrl]);
-  // };
-
   const handleNewUrlAdded = useCallback((newUrl: string) => {
-    console.log("video list length into another user", videoUrls.length),
-      setVideoUrls((prevVideoUrls: string[]) => [...prevVideoUrls, newUrl]);
+    // console.log("video list length into another user", videoUrls.length),
+    setVideoUrls((prevVideoUrls: string[]) => [...prevVideoUrls, newUrl]);
   }, []);
 
-  const handleUrlRemoved = (urlRemoved: string) => {
-    console.log("url removed", urlRemoved);
-    // setVideoUrls(videoUrls.filter((video) => video !== urlRemoved));
-    // if (selectedVideo === urlRemoved) {
-    //   const remainingVideos = videoUrls.filter((video) => video !== urlRemoved);
-    //   if (remainingVideos.length > 0) {
-    //     setSelectedVideo(remainingVideos[0]);
-    //   } else {
-    //     setSelectedVideo("");
-    //   }
-    // }
-  };
-  // const handleUrlRemoved = useCallback((urlRemoved: string) => {
-  //   console.log("url removed", urlRemoved);
-  //   setVideoList(videoList.filter((video) => video !== urlRemoved));
+  const handleUrlRemoved = useCallback(
+    (urlRemoved: string) => {
+      // console.log("url removed", urlRemoved);
 
-  //   if (selectedVideo === urlRemoved) {
-  //     const remainingVideos = videoList.filter((video) => video !== urlRemoved);
-  //     if (remainingVideos.length > 0) {
-  //       setSelectedVideo(remainingVideos[0]);
-  //     } else {
-  //       setSelectedVideo("");
-  //     }
-  //   }
-  // }, []);
+      setVideoUrls((prevVideoUrls: string[]) =>
+        prevVideoUrls.filter((video) => video !== urlRemoved)
+      );
+
+      if (selectedVideo === urlRemoved) {
+        const remainingVideos = videoUrls.filter(
+          (video) => video !== urlRemoved
+        );
+        if (remainingVideos.length > 0) {
+          setSelectedVideo(remainingVideos[0]);
+        } else {
+          setSelectedVideo("");
+        }
+      }
+    },
+    [selectedVideo, setSelectedVideo, videoUrls, setVideoUrls]
+  );
 
   useEffect(() => {
     if (newUrlAdded && newUrl.length > 0) {
-      console.log("new url socket getting emit", newUrl);
+      // console.log("new url socket getting emit", newUrl);
       socket.emit("newUrlAdded", roomId, newUrl);
       setNewUrl("");
       setNewUrlAdded(false);
@@ -161,37 +150,37 @@ function VideoPlayer({
   };
 
   const onPlay = (event: any) => {
-    console.log("onPlay before", isProgrammaticRef.current);
+    // console.log("onPlay before", isProgrammaticRef.current);
     if (!isProgrammaticRef.current) {
-      console.log("onPlay inside if", isProgrammaticRef.current);
+      // console.log("onPlay inside if", isProgrammaticRef.current);
       const time = event.target.getCurrentTime();
       socket.emit("play", roomId, time);
       setCurrentTime(time);
     }
     isProgrammaticRef.current = false; // Reset the flag after handling
-    console.log("onPlay after changed to false", isProgrammaticRef.current);
+    // console.log("onPlay after changed to false", isProgrammaticRef.current);
   };
 
   const onPause = (event: any) => {
-    console.log("on Pause before", isProgrammaticRef.current);
+    // console.log("on Pause before", isProgrammaticRef.current);
 
     if (!isProgrammaticRef.current) {
       const time = event.target.getCurrentTime();
-      console.log("pause inside if", isProgrammaticRef.current);
+      // console.log("pause inside if", isProgrammaticRef.current);
 
       socket.emit("pause", roomId, time);
       setCurrentTime(time);
     }
     setTimeout(() => {
       isProgrammaticRef.current = false; // Reset the flag after handling
-      console.log("onPause after changed to false", isProgrammaticRef.current);
+      // console.log("onPause after changed to false", isProgrammaticRef.current);
     }, 700); // Adjust the timeout as necessary// Reset the flag after handling
   };
 
   useEffect(() => {
     if (!isProgrammaticRef.current) {
       socket.emit("changeVideo", roomId, selectedVideo);
-      console.log("changing video", selectedVideo);
+      // console.log("changing video", selectedVideo);
     } else {
       isProgrammaticRef.current = false; // Reset the flag after handling
     }

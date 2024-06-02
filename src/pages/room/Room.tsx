@@ -62,7 +62,17 @@ function Room() {
       });
       return;
     }
-    // rooms/roomId  put request to this
+    // check url is already presnet in the list if yes then return and show toast notification
+    if (videoList.includes(url)) {
+      toast({
+        title: "Video Already Added",
+        description: "This video is already added to the list",
+        variant: "default",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await userRequest.put(`/room/${roomId}/addVideo`, { videoUrl: url });
       setVideoList([...videoList, url]);
