@@ -72,7 +72,7 @@ function VideoList({
 
   // Fetch video titles when videoUrls change
   useEffect(() => {
-    const apiKey = "AIzaSyALTwMsicfxrzYk8jn43UcrbEww-eVYE14";
+    const apiKey = import.meta.env.VITE_APP_YOUTUBE_API_KEY as string;
 
     const fetchTitles = async () => {
       const titles: Record<string, string> = {};
