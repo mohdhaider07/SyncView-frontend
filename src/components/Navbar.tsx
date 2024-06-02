@@ -11,7 +11,8 @@ const Navbar: React.FC = () => {
     <nav className="text-primary bg-white w-full shadow-lg">
       <div className="px-4 mx-auto  sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold text-primary">
+          <Link to="/" className="flex gap-2 text-2xl font-bold text-primary">
+            <img className="w-8 rounded-full aspect-square" src="/logo.avif"></img>
             SyncView
           </Link>
           <div className="hidden space-x-4 md:flex">
@@ -102,7 +103,10 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       {showDropdown && (
-        <div className="md:hidden absolute bg-white w-full z-50 shadow-lg" id="mobile-menu">
+        <div
+          className="md:hidden absolute bg-white w-full z-50 shadow-lg"
+          id="mobile-menu"
+        >
           <div className="px-2 flex flex-col pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/"

@@ -42,7 +42,7 @@ function VideoList({
         title: "Video Removed Successfully",
         variant: "default",
       });
-      setVideoList(videoUrls.filter((video) => video !== url));
+      setVideoList(videoUrls.filter((video) => video != url));
 
       if (selectedVideo == url) {
         const remainingVideos = videoUrls.filter((video) => video != url);
@@ -93,20 +93,21 @@ function VideoList({
           </div>
           {/* rght side of the div */}
           <div className="w-fit xl:w-fit lg:w-full">
-            <Popover open={showOptions === index} onOpenChange={(open) => setShowOptions(open ? index : -1)}>
-              <PopoverTrigger onClick={() => setShowOptions(-1)} >
-                <Button variant='outline' className="w-full px-2 py-1 text-xs">
+            <Popover
+              open={showOptions === index}
+              onOpenChange={(open) => setShowOptions(open ? index : -1)}
+            >
+              <PopoverTrigger onClick={() => setShowOptions(-1)}>
+                <Button variant="outline" className="w-full px-2 py-1 text-xs">
                   Options
                 </Button>
               </PopoverTrigger>
-              <PopoverContent 
-                side="bottom"
-                className="space-y-2 w-44">
+              <PopoverContent side="bottom" className="space-y-2 w-44">
                 <Button
                   disabled={isDeleting}
                   onClick={() => {
-                    setSelectedVideo(url)
-                    setShowOptions(-1)
+                    setSelectedVideo(url);
+                    setShowOptions(-1);
                   }}
                   className="w-full text-white "
                 >
@@ -115,8 +116,8 @@ function VideoList({
                 <Button
                   disabled={isDeleting}
                   onClick={() => {
-                    deleteVideo(url)
-                    setShowOptions(-1)
+                    deleteVideo(url);
+                    setShowOptions(-1);
                   }}
                   className="w-full bg-red-600 hover:bg-red-800"
                 >

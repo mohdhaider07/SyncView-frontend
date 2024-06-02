@@ -142,7 +142,7 @@ function VideoPlayer({
     socket.on("changeVideo", handleVideoChange);
     socket.on("newUrlAdded", handleNewUrlAdded);
     socket.on("urlRemoved", handleUrlRemoved);
-    socket.on("controlToggled", handleControlToggled);
+    socket.on("toggleControl", handleControlToggled);
 
     return () => {
       socket.off("play", handlePlay);
@@ -150,7 +150,7 @@ function VideoPlayer({
       socket.off("changeVideo", handleVideoChange);
       socket.off("newUrlAdded", handleNewUrlAdded);
       socket.off("urlRemoved", handleUrlRemoved);
-      socket.off("controlToggled", handleControlToggled);
+      socket.off("toggleControl", handleControlToggled);
     };
   }, [socket, roomId, handlePlay, handlePause]);
 
@@ -198,7 +198,8 @@ function VideoPlayer({
 
   //
   const toggleControl = () => {
-    socket.emit("toggleControl", !isControlEnabled); // Emit the state change
+    console.log("toggle control");
+    socket.emit("toggleControl", roomId, !isControlEnabled); // Emit the state change
     setIsControlEnabled((prev) => !prev);
   };
 
