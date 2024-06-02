@@ -45,7 +45,6 @@ function Room() {
 
   const addVideoUrl = async (url: string) => {
     // check for empty url
-    setIsLoading(true);
     if (!url) {
       toast({
         title: "Video URL is empty",
@@ -54,6 +53,7 @@ function Room() {
       });
       return;
     }
+    setIsLoading(true);
     // rooms/roomId  put request to this
     try {
       await userRequest.put(`/room/${roomId}/addVideo`, { videoUrl: url });

@@ -52,8 +52,8 @@ function Home() {
         autoPlay
       ></video> */}
       <div className="fixed inset-0 -z-10 h-full w-full bg-background"></div>
-      <h1 className="text-4xl font-bold mt-36">Welcome to Home Page</h1>
-      <div className="flex flex-col items-center justify-center w-1/3 p-4 mt-8 bg-transparent rounded-lg">
+      <h1 className="text-3xl sm:text-4xl font-bold mt-36">Welcome to Home Page</h1>
+      <div className="flex flex-col items-center justify-center min-w-[15rem]  sm:min-w-[25rem] w-1/3 p-4 mt-8 bg-transparent rounded-lg">
         <Input
           type="text"
           value={videoUrl}
@@ -74,7 +74,7 @@ function Home() {
         </div>
       </div>
       <p>OR</p>
-      <div className="flex flex-col items-center justify-center w-1/3 p-4 bg-transparent rounded-lg">
+      <div className="flex flex-col items-center justify-center min-w-[15rem] sm:min-w-[25rem] w-1/3 p-4 bg-transparent rounded-lg">
         <Input
           type="text"
           value={roomId}
