@@ -59,7 +59,7 @@ function Login() {
       setIsLoading(false);
       setAuthState(data);
       navigate("/");
-      // window.location.reload();
+      window.location.reload();
     } catch (error: any) {
       console.log(error);
       setIsLoading(false);

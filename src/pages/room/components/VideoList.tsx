@@ -28,6 +28,7 @@ function VideoList({
   setIsUrlRemoved: (value: boolean) => void;
 }) {
   const { toast } = useToast();
+  const [showOptions, setShowOptions] = useState<number>(-1);
   // isDeleting
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   // delete request room/delete-video/zlw6qzfye
@@ -91,24 +92,32 @@ function VideoList({
             </p>
           </div>
           {/* rght side of the div */}
-          <div key={index} className="w-fit xl:w-fit lg:w-full">
-            <Popover>
-              <PopoverTrigger asChild>
+          <div className="w-fit xl:w-fit lg:w-full">
+            <Popover open={showOptions === index} onOpenChange={(open) => setShowOptions(open ? index : -1)}>
+              <PopoverTrigger onClick={() => setShowOptions(-1)} >
                 <Button variant='outline' className="w-full px-2 py-1 text-xs">
                   Options
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="space-y-2 w-44">
+              <PopoverContent 
+                side="bottom"
+                className="space-y-2 w-44">
                 <Button
                   disabled={isDeleting}
-                  onClick={() => setSelectedVideo(url)}
+                  onClick={() => {
+                    setSelectedVideo(url)
+                    setShowOptions(-1)
+                  }}
                   className="w-full text-white "
                 >
                   Play Video
                 </Button>
                 <Button
                   disabled={isDeleting}
-                  onClick={() => deleteVideo(url)}
+                  onClick={() => {
+                    deleteVideo(url)
+                    setShowOptions(-1)
+                  }}
                   className="w-full bg-red-600 hover:bg-red-800"
                 >
                   {isDeleting ? "Deleting..." : "Delete Video"}
