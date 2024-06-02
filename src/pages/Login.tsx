@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { publicRequest } from "@/requestMethods";
+import { getRedirectUrl } from "@/utils/utils";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 function Login() {
@@ -58,7 +59,9 @@ function Login() {
       });
       setIsLoading(false);
       setAuthState(data);
-      navigate("/");
+      // get redirect url from local storage
+      const redirectUrl = getRedirectUrl();
+      navigate(redirectUrl || "/");
       window.location.reload();
     } catch (error: any) {
       console.log(error);
@@ -85,7 +88,7 @@ function Login() {
           <form onSubmit={handleSumbit} className="mt-4 space-y-4">
             {fields.map((field, index) => (
               <div key={index}>
-                <label htmlFor={field.id} className="font-medium text-sm">
+                <label htmlFor={field.id} className="text-sm font-medium">
                   {field.label}
                 </label>
                 <Input

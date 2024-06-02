@@ -1,4 +1,4 @@
-import { getYouTubeVideoId } from "@/utils/utils";
+import { fetchVideoTitle, getYouTubeVideoId } from "@/utils/utils";
 import {
   Popover,
   PopoverContent,
@@ -30,6 +30,8 @@ function VideoList({
   const { toast } = useToast();
   const [showOptions, setShowOptions] = useState<number>(-1);
   // isDeleting
+  const [videoTitles, setVideoTitles] = useState<Record<string, string>>({});
+
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   // delete request room/delete-video/zlw6qzfye
   const deleteVideo = async (url: string) => {
@@ -68,8 +70,22 @@ function VideoList({
     }
   };
 
+  // Fetch video titles when videoUrls change
   useEffect(() => {
-    console.log("videoUrls in video list components", videoUrls);
+    const apiKey = "AIzaSyALTwMsicfxrzYk8jn43UcrbEww-eVYE14";
+
+    const fetchTitles = async () => {
+      const titles: Record<string, string> = {};
+      for (const url of videoUrls) {
+        const videoId = getYouTubeVideoId(url);
+        const title = await fetchVideoTitle(videoId!, apiKey);
+        console.log("title", title);
+        titles[url] = title;
+      }
+      setVideoTitles(titles);
+    };
+
+    fetchTitles();
   }, [videoUrls]);
 
   return (
@@ -88,7 +104,7 @@ function VideoList({
               alt="Video Thumbnail"
             />
             <p className="w-48 text-xs text-gray-600 break-all text-wrap">
-              {url}
+              {videoTitles[url] || url}
             </p>
           </div>
           {/* rght side of the div */}

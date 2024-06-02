@@ -46,7 +46,7 @@ function Home() {
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-transparent text-primary">
+    <div className="flex flex-col items-center justify-center h-full min-h-[90vh] bg-transparent text-primary">
       {/* <video
         src="video.mp4"
         className="fixed inset-0 object-cover w-full h-full -z-10 backdrop-blur-sm"
