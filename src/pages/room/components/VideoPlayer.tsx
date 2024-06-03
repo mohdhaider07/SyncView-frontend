@@ -220,7 +220,7 @@ function VideoPlayer({
           />
           {/* show current time */}
 
-          <div>
+          <div className="mt-2">
             {isRoomCreator && (
               <Button
                 variant={isControlEnabled ? "destructive" : "default"}
