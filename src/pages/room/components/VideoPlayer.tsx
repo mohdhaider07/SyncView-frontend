@@ -203,6 +203,8 @@ function VideoPlayer({
     setIsControlEnabled((prev) => !prev);
   };
 
+  console.log("Last time video synced at", currentTime);
+
   return (
     <div>
       {selectedVideo.length > 0 ? (
@@ -217,9 +219,7 @@ function VideoPlayer({
             onPlay={onPlay}
           />
           {/* show current time */}
-          {/* <div>
-            <p>Current Time: {currentTime}s</p>
-          </div> */}
+
           <div>
             {isRoomCreator && (
               <Button
