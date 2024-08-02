@@ -11,6 +11,17 @@ export const getToken = (): string | null => {
   const authState = localStorage.getItem("authState");
   return authState ? JSON.parse(authState).token : null;
 };
+
+// user information from lcoal storage
+export const getUserDetails = () => {
+  const authState = localStorage.getItem("authState");
+  return authState ? JSON.parse(authState).user : null;
+};
+// remove auth
+export const removeAuth = () => {
+  localStorage.removeItem("authState");
+};
+
 // funtion to store reidrect url in local storage
 export const setRedirectUrl = (url: string): void => {
   // console.log("setting redirect url", url);
